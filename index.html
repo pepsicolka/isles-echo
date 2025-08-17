@@ -18,9 +18,7 @@
       padding: 20px;
       background: #2e8b57;
     }
-    header h1 {
-      margin: 0;
-    }
+    header h1 { margin: 0; }
     .currency-select {
       background: #333;
       color: white;
@@ -42,9 +40,7 @@
       cursor: pointer;
       transition: 0.3s;
     }
-    .tab.active {
-      background: #2e8b57;
-    }
+    .tab.active { background: #2e8b57; }
     .filters {
       text-align: center;
       margin-bottom: 15px;
@@ -59,9 +55,7 @@
       cursor: pointer;
       transition: 0.3s;
     }
-    .filters button.active {
-      background: #2e8b57;
-    }
+    .filters button.active { background: #2e8b57; }
     .shop {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -98,9 +92,7 @@
       cursor: pointer;
       transition: 0.3s;
     }
-    .buy-btn:hover {
-      background: #3cb371;
-    }
+    .buy-btn:hover { background: #3cb371; }
     /* Modal */
     .modal {
       display: none;
@@ -122,17 +114,13 @@
     }
     @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
     @keyframes slideUp { from {transform: translateY(30px);} to {transform: translateY(0);} }
-    .modal button {
-      margin-top: 10px;
-    }
+    .modal button { margin-top: 10px; }
     .close {
       float: right;
       cursor: pointer;
       color: #aaa;
     }
-    .close:hover {
-      color: #fff;
-    }
+    .close:hover { color: #fff; }
   </style>
 </head>
 <body>
@@ -173,31 +161,26 @@
   <script>
     const dinos = {
       herb: [
-        { name: "Dryosaurus", tier: 1, price: {"Default": 25}, img: "images/dryo.png" },
-        { name: "Avaceratops", tier: 1, price: {"Default": 30}, img: "images/avacera.png" },
-        { name: "Gallimimus", tier: 1, price: {"Default": 45}, img: "images/galli.png" }
+        { name: "Dryosaurus", tier: 1, price: {"Default": 25}, img: "" },
+        { name: "Avaceratops", tier: 1, price: {"Default": 30}, img: "" },
+        { name: "Gallimimus", tier: 1, price: {"Default": 45}, img: "" }
       ],
       carn: [
-        { name: "Herrerasaurus", tier: 1, price: {"Default": 25}, img: "images/herrera.png" },
-        { name: "Austroraptor", tier: 1, price: {"Default": 25}, img: "images/austro.png" },
-        { name: "Utahraptor", tier: 1, price: {"Default": 55}, img: "images/utah.png" }
+        { name: "Herrerasaurus", tier: 1, price: {"Default": 25}, img: "" },
+        { name: "Austroraptor", tier: 1, price: {"Default": 25}, img: "" },
+        { name: "Utahraptor", tier: 1, price: {"Default": 55}, img: "" }
       ]
     };
 
-    let rates = {
-      RUB: 1,
-      UAH: 0.45,
-      USD: 0.011
-    };
-
+    let rates = { RUB: 1, UAH: 0.45, USD: 0.011 };
     let currentCurrency = "RUB";
-    const currencySelect = document.getElementById("currencySelect");
 
     const shop = document.getElementById('shop');
     const modal = document.getElementById('modal');
     const modalTitle = document.getElementById('modalTitle');
     const modalPrice = document.getElementById('modalPrice');
     const genderSelect = document.getElementById('genderSelect');
+    const currencySelect = document.getElementById('currencySelect');
     let currentDino = null;
 
     async function fetchRates() {
@@ -222,8 +205,9 @@
         const card = document.createElement('div');
         card.className = "card";
         const basePrice = Object.values(d.price)[0];
+        const imgSrc = d.img || "https://via.placeholder.com/200x150?text=Dino";
         card.innerHTML = `
-          <img src="${d.img}" alt="${d.name}">
+          <img src="${imgSrc}" alt="${d.name}">
           <h3>${d.name}</h3>
           <p class="price">${convertPrice(basePrice)} ${currentCurrency}</p>
           <button class="buy-btn">Купить</button>
@@ -283,7 +267,8 @@
       if (currentDino) updatePrice();
     };
 
-    fetchRates(); // загрузка курсов при старте
+    fetchRates();
+    setInterval(fetchRates, 5 * 60 * 1000); // автообновление раз в 5 минут
   </script>
 </body>
 </html>
