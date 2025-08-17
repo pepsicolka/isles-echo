@@ -2,271 +2,94 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dino Shop</title>
+  <title>Isle's Echo Shop</title>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #1b1b1b;
-      color: #fff;
-    }
+    body { font-family: Arial, sans-serif; margin: 0; background: #f5f5f5; }
     header {
-      text-align: center;
-      padding: 20px;
-      background: #2e8b57;
-    }
-    header h1 {
-      margin: 0;
-    }
-    .tabs {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin: 20px 0;
-    }
-    .tab {
-      padding: 10px 20px;
-      background: #333;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    .tab.active {
-      background: #2e8b57;
-    }
-    .filters {
-      text-align: center;
-      margin-bottom: 15px;
-    }
-    .filters button {
-      margin: 0 5px;
-      padding: 6px 12px;
-      border: none;
-      border-radius: 6px;
-      background: #444;
+      background: #265f3f;
       color: white;
-      cursor: pointer;
-      transition: 0.3s;
+      padding: 15px 30px;
+      display: flex; justify-content: space-between; align-items: center;
     }
-    .filters button.active {
-      background: #2e8b57;
+    .currency-select {
+      padding: 5px; border-radius: 5px; border: none; font-size: 16px;
     }
     .shop {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-      padding: 20px;
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; padding: 20px;
     }
     .card {
-      background: #2b2b2b;
-      padding: 15px;
-      border-radius: 12px;
-      text-align: center;
-      transition: transform 0.3s, box-shadow 0.3s;
+      background: white; padding: 15px; width: 200px; text-align: center;
+      border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transition: transform 0.2s;
     }
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.5);
-    }
-    .card img {
-      max-width: 100%;
-      border-radius: 10px;
-      margin-bottom: 10px;
-    }
-    .price {
-      color: #90ee90;
-      font-size: 18px;
-      margin: 10px 0;
-    }
+    .card:hover { transform: translateY(-5px); }
     .buy-btn {
-      padding: 8px 16px;
-      border: none;
-      border-radius: 8px;
-      background: #2e8b57;
-      color: white;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    .buy-btn:hover {
-      background: #3cb371;
-    }
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7);
-      justify-content: center;
-      align-items: center;
-      animation: fadeIn 0.3s;
-    }
-    .modal-content {
-      background: #2b2b2b;
-      padding: 20px;
-      border-radius: 12px;
-      width: 300px;
-      text-align: center;
-      animation: slideUp 0.3s;
-    }
-    @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
-    @keyframes slideUp { from {transform: translateY(30px);} to {transform: translateY(0);} }
-    .modal button {
-      margin-top: 10px;
-    }
-    .close {
-      float: right;
-      cursor: pointer;
-      color: #aaa;
-    }
-    .close:hover {
-      color: #fff;
-    }
-    select {
-      margin-top: 10px;
-      padding: 5px;
-      border-radius: 6px;
-      border: none;
+      margin-top: 10px; padding: 6px 12px; border: none;
+      background: #265f3f; color: white; border-radius: 6px;
+      cursor: pointer; font-size: 14px;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>🦖 Dino Shop</h1>
-    <p>Выбирай динозавра и покупай!</p>
-  </header>
 
-  <div class="tabs">
-    <div class="tab active" data-category="herb">🌿 Травоядные</div>
-    <div class="tab" data-category="carn">🍖 Плотоядные</div>
-  </div>
+<header>
+  <h1>ISLE'S ECHO SHOP</h1>
+  <select id="currency" class="currency-select">
+    <option value="RUB">RUB</option>
+    <option value="UAH">UAH</option>
+    <option value="USD">USD</option>
+  </select>
+</header>
 
-  <div class="filters">
-    <button class="filter-btn active" data-tier="all">Все</button>
-    <button class="filter-btn" data-tier="1">Тир 1</button>
-    <button class="filter-btn" data-tier="2">Тир 2</button>
-    <button class="filter-btn" data-tier="3">Тир 3</button>
-  </div>
+<div class="shop" id="shop"></div>
 
-  <section class="shop" id="shop"></section>
+<script>
+  const shop = document.getElementById("shop");
+  const currencySelect = document.getElementById("currency");
+  const dinos = [
+    { name: "Rex", price: 1500 },
+    { name: "Utah", price: 1200 },
+    { name: "Allo", price: 1300 },
+    { name: "Antro", price: 1000 },
+    { name: "Cera", price: 1100 },
+    { name: "Giga", price: 1700 },
+    { name: "Spino", price: 2000 }
+  ];
+  let rates = { UAH: 0.42, USD: 0.011 };
 
-  <!-- Modal -->
-  <div class="modal" id="modal">
-    <div class="modal-content">
-      <span class="close" id="closeModal">&times;</span>
-      <h2 id="modalTitle"></h2>
-      <select id="genderSelect"></select>
-      <p class="price" id="modalPrice"></p>
-      <button class="buy-btn">Перейти к оплате</button>
-    </div>
-  </div>
-
-  <script>
-    const dinos = {
-      herb: [
-        { name: "Dryosaurus", tier: 1, price: {"Default": 25}, img: "images/dryo.png" },
-        { name: "Avaceratops", tier: 1, price: {"Default": 30}, img: "images/avacera.png" },
-        { name: "Gallimimus", tier: 1, price: {"Default": 45}, img: "images/galli.png" },
-        { name: "Maiasaura", tier: 2, price: {"Male": 90, "Female": 130}, img: "images/maia.png" },
-        { name: "Diabloceratops", tier: 2, price: {"Male": 110, "Female": 165}, img: "images/diablo.png" },
-        { name: "Pachycephalosaurus", tier: 2, price: {"Male": 40, "Female": 90}, img: "images/pachy.png" },
-        { name: "Stegosaurus", tier: 3, price: {"Male": 210, "Female": 275}, img: "images/stego.png" },
-        { name: "Ankylosaurus", tier: 3, price: {"Male": 190, "Female": 255}, img: "images/ankylo.png" },
-        { name: "Therizinosaurus", tier: 3, price: {"Male": 225, "Female": 290}, img: "images/theri.png" },
-        { name: "Triceratops", tier: 3, price: {"Male": 235, "Female": 295}, img: "images/trike.png" },
-        { name: "Shantungosaurus", tier: 3, price: {"Male": 245, "Female": 310}, img: "images/shantu.png" },
-        { name: "Camarasaurus", tier: 3, price: {"Default": 340}, img: "images/camara.png" },
-        { name: "Puertasaurus", tier: 3, price: {"Default": 445}, img: "images/puerta.png" }
-      ],
-      carn: [
-        { name: "Herrerasaurus", tier: 1, price: {"Default": 25}, img: "images/herrera.png" },
-        { name: "Austroraptor", tier: 1, price: {"Default": 25}, img: "images/austro.png" },
-        { name: "Utahraptor", tier: 1, price: {"Default": 55}, img: "images/utah.png" },
-        { name: "Dilophosaurus", tier: 1, price: {"Default": 65}, img: "images/dilo.png" },
-        { name: "Ceratosaurus", tier: 2, price: {"Male": 110, "Female": 150}, img: "images/cerato.png" },
-        { name: "Allosaurus", tier: 2, price: {"Male": 150, "Female": 190}, img: "images/allo.png" },
-        { name: "Baryonyx", tier: 2, price: {"Male": 85, "Female": 125}, img: "images/baryo.png" },
-        { name: "Carnotaurus", tier: 2, price: {"Male": 110, "Female": 180}, img: "images/carno.png" },
-        { name: "Suchomimus", tier: 2, price: {"Male": 150, "Female": 190}, img: "images/sucho.png" },
-        { name: "Albertosaurus", tier: 2, price: {"Default": 220}, img: "images/alberto.png" },
-        { name: "Acrocanthosaurus", tier: 3, price: {"Male": 190, "Female": 260}, img: "images/acro.png" },
-        { name: "Tyrannosaurus (Subadult)", tier: 3, price: {"Male": 220, "Female": 300}, img: "images/trex_sub.png" },
-        { name: "Tyrannosaurus (Feathered)", tier: 3, price: {"Default": 350}, img: "images/trex_feather.png" },
-        { name: "Spinosaurus", tier: 3, price: {"Male": 220, "Female": 320}, img: "images/spino.png" },
-        { name: "Giganotosaurus", tier: 3, price: {"Male": 210, "Female": 300}, img: "images/giga.png" }
-      ]
-    };
-
-    const shop = document.getElementById('shop');
-    const modal = document.getElementById('modal');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalPrice = document.getElementById('modalPrice');
-    const genderSelect = document.getElementById('genderSelect');
-    let currentDino = null;
-
-    function render(category="herb", tier="all") {
-      shop.innerHTML = "";
-      dinos[category].forEach(d => {
-        if (tier !== "all" && d.tier != tier) return;
-        const card = document.createElement('div');
-        card.className = "card";
-        card.innerHTML = `
-          <img src="${d.img || 'https://cdn-icons-png.flaticon.com/512/616/616408.png'}" alt="${d.name}">
-          <h3>${d.name}</h3>
-          <p class="price">${Object.values(d.price)[0]} RUB</p>
-          <button class="buy-btn">Купить</button>
-        `;
-        card.querySelector('.buy-btn').onclick = () => openModal(d);
-        shop.appendChild(card);
-      });
+  async function fetchRates() {
+    try {
+      const res = await fetch("https://api.exchangerate.host/latest?base=RUB&symbols=UAH,USD");
+      const data = await res.json();
+      rates = {
+        UAH: data.rates.UAH,
+        USD: data.rates.USD
+      };
+    } catch (err) {
+      console.error("Ошибка при получении курса:", err);
     }
+  }
 
-    function openModal(dino) {
-      currentDino = dino;
-      modal.style.display = "flex";
-      modalTitle.textContent = dino.name;
-      genderSelect.innerHTML = "";
-      const keys = Object.keys(dino.price);
-      keys.forEach(k => {
-        const opt = document.createElement("option");
-        opt.value = k;
-        opt.textContent = k;
-        genderSelect.appendChild(opt);
-      });
-      updatePrice();
-    }
-
-    function updatePrice() {
-      const gender = genderSelect.value;
-      modalPrice.textContent = dinoPrice(currentDino, gender) + " RUB";
-    }
-
-    function dinoPrice(dino, gender) {
-      return dino.price[gender] || Object.values(dino.price)[0];
-    }
-
-    genderSelect.onchange = updatePrice;
-    document.getElementById('closeModal').onclick = () => modal.style.display = "none";
-    window.onclick = e => { if (e.target == modal) modal.style.display = "none"; }
-
-    document.querySelectorAll('.tab').forEach(tab => {
-      tab.onclick = () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        render(tab.dataset.category, document.querySelector('.filter-btn.active').dataset.tier);
-      }
+  function renderShop() {
+    shop.innerHTML = "";
+    const cur = currencySelect.value;
+    dinos.forEach(d => {
+      const converted = (d.price * (cur === "RUB" ? 1 : rates[cur])).toFixed(2);
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <h3>${d.name}</h3>
+        <p><strong>${converted} ${cur}</strong></p>
+        <button class="buy-btn">Купить</button>
+      `;
+      shop.appendChild(card);
     });
+  }
 
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.onclick = () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        render(document.querySelector('.tab.active').dataset.category, btn.dataset.tier);
-      }
-    });
+  currencySelect.addEventListener("change", renderShop);
 
-    render();
-  </script>
+  // Загружаем курсы, затем рендер сайта
+  fetchRates().then(renderShop);
+</script>
+
 </body>
 </html>
