@@ -28,12 +28,13 @@
     }
     .filters button, select, .filters input {
       margin: 5px;
-      padding: 6px 12px;
+      padding: 8px 14px;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
       background: #444;
       color: white;
+      font-size: 14px;
     }
     .filters button.active {
       background: #2e7d32;
@@ -42,22 +43,24 @@
       background: #2b2b2b;
       color: white;
       border: 1px solid #555;
-      border-radius: 6px;
-      padding: 6px 10px;
       width: 200px;
     }
     .shop {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 15px;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
       padding: 20px;
     }
     .card {
       background: #2b2b2b;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
       text-align: center;
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: scale(1.03);
     }
     .card h3 {
       margin: 0 0 10px 0;
@@ -66,6 +69,32 @@
     .price {
       font-weight: bold;
       color: #90ee90;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    .variant {
+      margin: 10px 0;
+      padding: 6px;
+      border-radius: 6px;
+      border: none;
+      background: #3a3a3a;
+      color: white;
+      cursor: pointer;
+    }
+    .buy-btn {
+      margin-top: 12px;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #2e7d32;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    .buy-btn:hover {
+      background: #45a049;
     }
   </style>
 </head>
@@ -101,58 +130,39 @@
     };
 
     const dinos = [
-      // 🌿 Травоядные
-      {name: "Dryosaurus", price: 25, type: "herbivore", tier: 1},
-      {name: "Avaceratops", price: 30, type: "herbivore", tier: 1},
-      {name: "Gallimimus", price: 45, type: "herbivore", tier: 1},
+      {name: "Dryosaurus", type: "herbivore", tier: 1, variants: [{v:"Default", p:25}]},
+      {name: "Avaceratops", type: "herbivore", tier: 1, variants: [{v:"Default", p:30}]},
+      {name: "Gallimimus", type: "herbivore", tier: 1, variants: [{v:"Default", p:45}]},
 
-      {name: "Maiasaura (Male)", price: 90, type: "herbivore", tier: 2},
-      {name: "Maiasaura (Female)", price: 130, type: "herbivore", tier: 2},
-      {name: "Diabloceratops (Male)", price: 110, type: "herbivore", tier: 2},
-      {name: "Diabloceratops (Female)", price: 165, type: "herbivore", tier: 2},
-      {name: "Pachycephalosaurus (Male)", price: 40, type: "herbivore", tier: 2},
-      {name: "Pachycephalosaurus (Female)", price: 90, type: "herbivore", tier: 2},
+      {name: "Maiasaura", type: "herbivore", tier: 2, variants: [{v:"Male", p:90},{v:"Female", p:130}]},
+      {name: "Diabloceratops", type: "herbivore", tier: 2, variants: [{v:"Male", p:110},{v:"Female", p:165}]},
+      {name: "Pachycephalosaurus", type: "herbivore", tier: 2, variants: [{v:"Male", p:40},{v:"Female", p:90}]},
 
-      {name: "Stegosaurus (Male)", price: 210, type: "herbivore", tier: 3},
-      {name: "Stegosaurus (Female)", price: 275, type: "herbivore", tier: 3},
-      {name: "Ankylosaurus (Male)", price: 190, type: "herbivore", tier: 3},
-      {name: "Ankylosaurus (Female)", price: 255, type: "herbivore", tier: 3},
-      {name: "Therizinosaurus (Male)", price: 225, type: "herbivore", tier: 3},
-      {name: "Therizinosaurus (Female)", price: 290, type: "herbivore", tier: 3},
-      {name: "Triceratops (Male)", price: 235, type: "herbivore", tier: 3},
-      {name: "Triceratops (Female)", price: 295, type: "herbivore", tier: 3},
-      {name: "Shantungosaurus (Male)", price: 245, type: "herbivore", tier: 3},
-      {name: "Shantungosaurus (Female)", price: 310, type: "herbivore", tier: 3},
-      {name: "Camarasaurus", price: 340, type: "herbivore", tier: 3},
-      {name: "Puertasaurus", price: 445, type: "herbivore", tier: 3},
+      {name: "Stegosaurus", type: "herbivore", tier: 3, variants: [{v:"Male", p:210},{v:"Female", p:275}]},
+      {name: "Ankylosaurus", type: "herbivore", tier: 3, variants: [{v:"Male", p:190},{v:"Female", p:255}]},
+      {name: "Therizinosaurus", type: "herbivore", tier: 3, variants: [{v:"Male", p:225},{v:"Female", p:290}]},
+      {name: "Triceratops", type: "herbivore", tier: 3, variants: [{v:"Male", p:235},{v:"Female", p:295}]},
+      {name: "Shantungosaurus", type: "herbivore", tier: 3, variants: [{v:"Male", p:245},{v:"Female", p:310}]},
+      {name: "Camarasaurus", type: "herbivore", tier: 3, variants: [{v:"Default", p:340}]},
+      {name: "Puertasaurus", type: "herbivore", tier: 3, variants: [{v:"Default", p:445}]},
 
-      // 🍖 Плотоядные
-      {name: "Herrerasaurus", price: 25, type: "carnivore", tier: 1},
-      {name: "Austroraptor", price: 25, type: "carnivore", tier: 1},
-      {name: "Utahraptor", price: 55, type: "carnivore", tier: 1},
-      {name: "Dilophosaurus", price: 65, type: "carnivore", tier: 1},
+      {name: "Herrerasaurus", type: "carnivore", tier: 1, variants: [{v:"Default", p:25}]},
+      {name: "Austroraptor", type: "carnivore", tier: 1, variants: [{v:"Default", p:25}]},
+      {name: "Utahraptor", type: "carnivore", tier: 1, variants: [{v:"Default", p:55}]},
+      {name: "Dilophosaurus", type: "carnivore", tier: 1, variants: [{v:"Default", p:65}]},
 
-      {name: "Ceratosaurus (Male)", price: 110, type: "carnivore", tier: 2},
-      {name: "Ceratosaurus (Female)", price: 150, type: "carnivore", tier: 2},
-      {name: "Allosaurus (Male)", price: 150, type: "carnivore", tier: 2},
-      {name: "Allosaurus (Female)", price: 190, type: "carnivore", tier: 2},
-      {name: "Baryonyx (Male)", price: 85, type: "carnivore", tier: 2},
-      {name: "Baryonyx (Female)", price: 125, type: "carnivore", tier: 2},
-      {name: "Carnotaurus (Male)", price: 110, type: "carnivore", tier: 2},
-      {name: "Carnotaurus (Female)", price: 180, type: "carnivore", tier: 2},
-      {name: "Suchomimus (Male)", price: 150, type: "carnivore", tier: 2},
-      {name: "Suchomimus (Female)", price: 190, type: "carnivore", tier: 2},
-      {name: "Albertosaurus", price: 220, type: "carnivore", tier: 2},
+      {name: "Ceratosaurus", type: "carnivore", tier: 2, variants: [{v:"Male", p:110},{v:"Female", p:150}]},
+      {name: "Allosaurus", type: "carnivore", tier: 2, variants: [{v:"Male", p:150},{v:"Female", p:190}]},
+      {name: "Baryonyx", type: "carnivore", tier: 2, variants: [{v:"Male", p:85},{v:"Female", p:125}]},
+      {name: "Carnotaurus", type: "carnivore", tier: 2, variants: [{v:"Male", p:110},{v:"Female", p:180}]},
+      {name: "Suchomimus", type: "carnivore", tier: 2, variants: [{v:"Male", p:150},{v:"Female", p:190}]},
+      {name: "Albertosaurus", type: "carnivore", tier: 2, variants: [{v:"Default", p:220}]},
 
-      {name: "Acrocanthosaurus (Male)", price: 190, type: "carnivore", tier: 3},
-      {name: "Acrocanthosaurus (Female)", price: 260, type: "carnivore", tier: 3},
-      {name: "Tyrannosaurus (Subadult Male)", price: 220, type: "carnivore", tier: 3},
-      {name: "Tyrannosaurus (Subadult Female)", price: 300, type: "carnivore", tier: 3},
-      {name: "Tyrannosaurus (Feathered)", price: 350, type: "carnivore", tier: 3},
-      {name: "Spinosaurus (Male)", price: 220, type: "carnivore", tier: 3},
-      {name: "Spinosaurus (Female)", price: 320, type: "carnivore", tier: 3},
-      {name: "Giganotosaurus (Male)", price: 210, type: "carnivore", tier: 3},
-      {name: "Giganotosaurus (Female)", price: 300, type: "carnivore", tier: 3}
+      {name: "Acrocanthosaurus", type: "carnivore", tier: 3, variants: [{v:"Male", p:190},{v:"Female", p:260}]},
+      {name: "Tyrannosaurus (Subadult)", type: "carnivore", tier: 3, variants: [{v:"Male", p:220},{v:"Female", p:300}]},
+      {name: "Tyrannosaurus (Feathered)", type: "carnivore", tier: 3, variants: [{v:"Default", p:350}]},
+      {name: "Spinosaurus", type: "carnivore", tier: 3, variants: [{v:"Male", p:220},{v:"Female", p:320}]},
+      {name: "Giganotosaurus", type: "carnivore", tier: 3, variants: [{v:"Male", p:210},{v:"Female", p:300}]}
     ];
 
     let currentType = "all";
@@ -163,17 +173,25 @@
       const shop = document.getElementById("shop");
       shop.innerHTML = "";
       const selectedCurrency = document.getElementById("currency").value;
+      
       dinos.forEach(dino => {
         if (
           (currentType === "all" || dino.type === currentType) &&
           (currentTier === "all" || dino.tier == currentTier) &&
           (dino.name.toLowerCase().includes(searchQuery.toLowerCase()))
         ) {
-          const priceConverted = (dino.price * exchangeRates[selectedCurrency]).toFixed(2);
+          let optionsHTML = "";
+          dino.variants.forEach((variant, i) => {
+            const priceConverted = (variant.p * exchangeRates[selectedCurrency]).toFixed(2);
+            optionsHTML += `<option value="${variant.p}">${variant.v} - ${priceConverted} ${selectedCurrency}</option>`;
+          });
+          
           shop.innerHTML += `
             <div class="card">
               <h3>${dino.name}</h3>
-              <p class="price">${priceConverted} ${selectedCurrency}</p>
+              <select class="variant">${optionsHTML}</select>
+              <p class="price"></p>
+              <button class="buy-btn" onclick="buyDino('${dino.name}')">Купить</button>
             </div>
           `;
         }
@@ -188,6 +206,10 @@
       currentTier = tier;
       renderShop();
     }
+    function buyDino(name) {
+      alert("Вы купили: " + name + " 🎉");
+    }
+
     document.getElementById("currency").addEventListener("change", renderShop);
     document.getElementById("search").addEventListener("input", (e) => {
       searchQuery = e.target.value;
