@@ -180,20 +180,43 @@
           (currentTier === "all" || dino.tier == currentTier) &&
           (dino.name.toLowerCase().includes(searchQuery.toLowerCase()))
         ) {
-          let optionsHTML = "";
+          const card = document.createElement("div");
+          card.className = "card";
+          
+          const title = document.createElement("h3");
+          title.textContent = dino.name;
+          card.appendChild(title);
+
+          const select = document.createElement("select");
+          select.className = "variant";
           dino.variants.forEach((variant, i) => {
             const priceConverted = (variant.p * exchangeRates[selectedCurrency]).toFixed(2);
-            optionsHTML += `<option value="${variant.p}">${variant.v} - ${priceConverted} ${selectedCurrency}</option>`;
+            const option = document.createElement("option");
+            option.value = variant.p;
+            option.textContent = `${variant.v} - ${priceConverted} ${selectedCurrency}`;
+            select.appendChild(option);
           });
-          
-          shop.innerHTML += `
-            <div class="card">
-              <h3>${dino.name}</h3>
-              <select class="variant">${optionsHTML}</select>
-              <p class="price"></p>
-              <button class="buy-btn" onclick="buyDino('${dino.name}')">Купить</button>
-            </div>
-          `;
+          card.appendChild(select);
+
+          const priceEl = document.createElement("p");
+          priceEl.className = "price";
+          const updatePrice = () => {
+            const basePrice = parseFloat(select.value);
+            const converted = (basePrice * exchangeRates[selectedCurrency]).toFixed(2);
+            priceEl.textContent = `Цена: ${converted} ${selectedCurrency}`;
+          };
+          updatePrice();
+          card.appendChild(priceEl);
+
+          select.addEventListener("change", updatePrice);
+
+          const buyBtn = document.createElement("button");
+          buyBtn.className = "buy-btn";
+          buyBtn.textContent = "Купить";
+          buyBtn.onclick = () => alert("Вы купили: " + dino.name + " (" + select.options[select.selectedIndex].text.split(" - ")[0] + ")");
+          card.appendChild(buyBtn);
+
+          shop.appendChild(card);
         }
       });
     }
@@ -205,9 +228,6 @@
     function filterTier(tier) {
       currentTier = tier;
       renderShop();
-    }
-    function buyDino(name) {
-      alert("Вы купили: " + name + " 🎉");
     }
 
     document.getElementById("currency").addEventListener("change", renderShop);
