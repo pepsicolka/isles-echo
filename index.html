@@ -1,12 +1,83 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Isle's Echo Dino Shop</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #1b1b1b;
+      color: #fff;
+      text-align: center;
+    }
+    header {
+      background: #2e8b57;
+      padding: 20px;
+    }
+    h1 {
+      margin: 0;
+    }
+    .shop {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    .card {
+      background: #333;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: scale(1.05);
+    }
+    .card img {
+      max-width: 100%;
+      border-radius: 10px;
+    }
+    .price {
+      font-size: 18px;
+      font-weight: bold;
+      color: #90ee90;
+    }
+    footer {
+      background: #2e8b57;
+      padding: 10px;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Добро пожаловать в Isle's Echo Dino Shop 🦖</h1>
-  <p>Здесь вы сможете купить себе динозавра!</p>
+  <header>
+    <h1>🦖 Isle's Echo Dino Shop</h1>
+    <p>Buy your favorite dinos online!</p>
+  </header>
+
+  <section class="shop">
+    <div class="card">
+      <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="T-Rex">
+      <h2>T-Rex</h2>
+      <p class="price">$1500</p>
+    </div>
+    <div class="card">
+      <img src="https://cdn-icons-png.flaticon.com/512/616/616430.png" alt="Triceratops">
+      <h2>Triceratops</h2>
+      <p class="price">$1200</p>
+    </div>
+    <div class="card">
+      <img src="https://cdn-icons-png.flaticon.com/512/616/616404.png" alt="Velociraptor">
+      <h2>Velociraptor</h2>
+      <p class="price">$1000</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 Isle's Echo Dino Shop</p>
+  </footer>
 </body>
 </html>
