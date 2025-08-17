@@ -1,83 +1,181 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Isle's Echo Dino Shop</title>
+  <title>Isle's Echo Shop</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      padding: 0;
-      background: #1b1b1b;
-      color: #fff;
-      text-align: center;
+      background: #f5f5f5;
+      color: #333;
     }
+
     header {
-      background: #2e8b57;
-      padding: 20px;
+      background: #2e5e3e;
+      color: white;
+      text-align: center;
+      padding: 30px 0;
+      font-size: 2.5rem;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-transform: uppercase;
     }
-    h1 {
-      margin: 0;
-    }
+
     .shop {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 20px;
-      padding: 20px;
+      padding: 40px;
+      max-width: 1200px;
+      margin: auto;
     }
+
     .card {
-      background: #333;
-      border-radius: 10px;
-      padding: 15px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-      transition: transform 0.2s;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0; /* для анимации */
+      transform: translateY(30px);
+      animation: fadeUp 0.8s ease forwards;
     }
+
+    /* Анимация появления */
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Задержка для плавного эффекта */
+    .card:nth-child(1) { animation-delay: 0.1s; }
+    .card:nth-child(2) { animation-delay: 0.2s; }
+    .card:nth-child(3) { animation-delay: 0.3s; }
+    .card:nth-child(4) { animation-delay: 0.4s; }
+    .card:nth-child(5) { animation-delay: 0.5s; }
+    .card:nth-child(6) { animation-delay: 0.6s; }
+    .card:nth-child(7) { animation-delay: 0.7s; }
+
     .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .card:hover img {
       transform: scale(1.05);
     }
-    .card img {
-      max-width: 100%;
-      border-radius: 10px;
+
+    .card-content {
+      padding: 15px;
+      text-align: center;
     }
+
+    .card h3 {
+      margin: 10px 0;
+      font-size: 1.3rem;
+    }
+
     .price {
-      font-size: 18px;
-      font-weight: bold;
-      color: #90ee90;
+      font-size: 1.1rem;
+      color: #2e5e3e;
+      margin-bottom: 12px;
     }
-    footer {
-      background: #2e8b57;
-      padding: 10px;
-      margin-top: 20px;
+
+    .btn {
+      display: inline-block;
+      padding: 8px 16px;
+      background: #2e5e3e;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.3s ease;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: #1e3e2a;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>🦖 Isle's Echo Dino Shop</h1>
-    <p>Buy your favorite dinos online!</p>
-  </header>
+  <header>Isle's Echo Shop</header>
 
   <section class="shop">
     <div class="card">
-      <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="T-Rex">
-      <h2>T-Rex</h2>
-      <p class="price">$1500</p>
+      <img src="rex.jpg" alt="Rex">
+      <div class="card-content">
+        <h3>Rex</h3>
+        <div class="price">1500₽</div>
+        <a href="#" class="btn">Купить</a>
+      </div>
     </div>
+
     <div class="card">
-      <img src="https://cdn-icons-png.flaticon.com/512/616/616430.png" alt="Triceratops">
-      <h2>Triceratops</h2>
-      <p class="price">$1200</p>
+      <img src="utah.jpg" alt="Utah">
+      <div class="card-content">
+        <h3>Utah</h3>
+        <div class="price">1200₽</div>
+        <a href="#" class="btn">Купить</a>
+      </div>
     </div>
+
     <div class="card">
-      <img src="https://cdn-icons-png.flaticon.com/512/616/616404.png" alt="Velociraptor">
-      <h2>Velociraptor</h2>
-      <p class="price">$1000</p>
+      <img src="allo.jpg" alt="Allo">
+      <div class="card-content">
+        <h3>Allo</h3>
+        <div class="price">1300₽</div>
+        <a href="#" class="btn">Купить</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="antro.jpg" alt="Antro">
+      <div class="card-content">
+        <h3>Antro</h3>
+        <div class="price">1000₽</div>
+        <a href="#" class="btn">Купить</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="cera.jpg" alt="Cera">
+      <div class="card-content">
+        <h3>Cera</h3>
+        <div class="price">1100₽</div>
+        <a href="#" class="btn">Купить</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="giga.jpg" alt="Giga">
+      <div class="card-content">
+        <h3>Giga</h3>
+        <div class="price">1700₽</div>
+        <a href="#" class="btn">Купить</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="spino.jpg" alt="Spino">
+      <div class="card-content">
+        <h3>Spino</h3>
+        <div class="price">2000₽</div>
+        <a href="#" class="btn">Купить</a>
+      </div>
     </div>
   </section>
-
-  <footer>
-    <p>© 2025 Isle's Echo Dino Shop</p>
-  </footer>
 </body>
 </html>
