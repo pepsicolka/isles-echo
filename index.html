@@ -5,49 +5,46 @@
   <title>Dino Shop</title>
   <style>
     body {
-      margin: 0;
+      background-color: #1c1c1c;
+      color: white;
       font-family: Arial, sans-serif;
-      background: #1c1c1c;
-      color: #fff;
+      margin: 0;
+      padding: 0;
     }
     header {
-      background: #2e8b57;
+      background: #2e7d32;
       padding: 10px 20px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
     }
     header h1 {
       margin: 0;
-      font-size: 24px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    select {
-      padding: 5px 10px;
-      border-radius: 6px;
-      border: none;
-      background: #333;
-      color: #fff;
+      font-size: 22px;
     }
     .filters {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
+      text-align: center;
       margin: 20px 0;
     }
-    .filters button {
-      padding: 8px 14px;
+    .filters button, select, .filters input {
+      margin: 5px;
+      padding: 6px 12px;
       border: none;
       border-radius: 6px;
-      background: #333;
-      color: #fff;
       cursor: pointer;
-      transition: 0.3s;
+      background: #444;
+      color: white;
     }
     .filters button.active {
-      background: #2e8b57;
+      background: #2e7d32;
+    }
+    .filters input {
+      background: #2b2b2b;
+      color: white;
+      border: 1px solid #555;
+      border-radius: 6px;
+      padding: 6px 10px;
+      width: 200px;
     }
     .shop {
       display: grid;
@@ -57,26 +54,24 @@
     }
     .card {
       background: #2b2b2b;
-      border-radius: 10px;
       padding: 15px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.4);
-      transition: transform 0.3s;
-    }
-    .card:hover {
-      transform: scale(1.05);
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+      text-align: center;
     }
     .card h3 {
       margin: 0 0 10px 0;
+      font-size: 18px;
     }
     .price {
       font-weight: bold;
-      margin-top: 5px;
+      color: #90ee90;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>🦕 Dino Shop</h1>
+    <h1>🦖 Dino Shop</h1>
     <select id="currency">
       <option value="RUB">RUB</option>
       <option value="UAH">UAH</option>
@@ -85,126 +80,121 @@
   </header>
 
   <div class="filters">
-    <button data-type="all" class="active">Все</button>
-    <button data-type="herbivore">🌿 Травоядные</button>
-    <button data-type="carnivore">🍖 Плотоядные</button>
-    <button data-tier="1">Тир 1</button>
-    <button data-tier="2">Тир 2</button>
-    <button data-tier="3">Тир 3</button>
+    <button onclick="filterType('all')" class="active">Все</button>
+    <button onclick="filterType('herbivore')">🌿 Травоядные</button>
+    <button onclick="filterType('carnivore')">🍖 Плотоядные</button>
+    <button onclick="filterTier('all')">Все тиры</button>
+    <button onclick="filterTier('1')">Тир 1</button>
+    <button onclick="filterTier('2')">Тир 2</button>
+    <button onclick="filterTier('3')">Тир 3</button>
+    <br>
+    <input type="text" id="search" placeholder="Поиск динозавра...">
   </div>
 
   <div class="shop" id="shop"></div>
 
   <script>
-    const dinos = [
-      { name: "Dryosaurus", price: 25, type: "herbivore", tier: 1 },
-      { name: "Avaceratops", price: 30, type: "herbivore", tier: 1 },
-      { name: "Gallimimus", price: 45, type: "herbivore", tier: 1 },
-      { name: "Maiasaura (Male)", price: 90, type: "herbivore", tier: 2 },
-      { name: "Maiasaura (Female)", price: 130, type: "herbivore", tier: 2 },
-      { name: "Diabloceratops (Male)", price: 110, type: "herbivore", tier: 2 },
-      { name: "Diabloceratops (Female)", price: 165, type: "herbivore", tier: 2 },
-      { name: "Pachycephalosaurus (Male)", price: 40, type: "herbivore", tier: 2 },
-      { name: "Pachycephalosaurus (Female)", price: 90, type: "herbivore", tier: 2 },
-      { name: "Stegosaurus (Male)", price: 210, type: "herbivore", tier: 3 },
-      { name: "Stegosaurus (Female)", price: 275, type: "herbivore", tier: 3 },
-      { name: "Ankylosaurus (Male)", price: 190, type: "herbivore", tier: 3 },
-      { name: "Ankylosaurus (Female)", price: 255, type: "herbivore", tier: 3 },
-      { name: "Therizinosaurus (Male)", price: 225, type: "herbivore", tier: 3 },
-      { name: "Therizinosaurus (Female)", price: 290, type: "herbivore", tier: 3 },
-      { name: "Triceratops (Male)", price: 235, type: "herbivore", tier: 3 },
-      { name: "Triceratops (Female)", price: 295, type: "herbivore", tier: 3 },
-      { name: "Shantungosaurus (Male)", price: 245, type: "herbivore", tier: 3 },
-      { name: "Shantungosaurus (Female)", price: 310, type: "herbivore", tier: 3 },
-      { name: "Camarasaurus", price: 340, type: "herbivore", tier: 3 },
-      { name: "Puertasaurus", price: 445, type: "herbivore", tier: 3 },
+    const exchangeRates = {
+      RUB: 1,
+      UAH: 0.42,
+      USD: 0.011
+    };
 
-      { name: "Herrerasaurus", price: 25, type: "carnivore", tier: 1 },
-      { name: "Austroraptor", price: 25, type: "carnivore", tier: 1 },
-      { name: "Utahraptor", price: 55, type: "carnivore", tier: 1 },
-      { name: "Dilophosaurus", price: 65, type: "carnivore", tier: 1 },
-      { name: "Ceratosaurus (Male)", price: 110, type: "carnivore", tier: 2 },
-      { name: "Ceratosaurus (Female)", price: 150, type: "carnivore", tier: 2 },
-      { name: "Allosaurus (Male)", price: 150, type: "carnivore", tier: 2 },
-      { name: "Allosaurus (Female)", price: 190, type: "carnivore", tier: 2 },
-      { name: "Baryonyx (Male)", price: 85, type: "carnivore", tier: 2 },
-      { name: "Baryonyx (Female)", price: 125, type: "carnivore", tier: 2 },
-      { name: "Carnotaurus (Male)", price: 110, type: "carnivore", tier: 2 },
-      { name: "Carnotaurus (Female)", price: 180, type: "carnivore", tier: 2 },
-      { name: "Suchomimus (Male)", price: 150, type: "carnivore", tier: 2 },
-      { name: "Suchomimus (Female)", price: 190, type: "carnivore", tier: 2 },
-      { name: "Albertosaurus", price: 220, type: "carnivore", tier: 2 },
-      { name: "Acrocanthosaurus (Male)", price: 190, type: "carnivore", tier: 3 },
-      { name: "Acrocanthosaurus (Female)", price: 260, type: "carnivore", tier: 3 },
-      { name: "Tyrannosaurus (Subadult Male)", price: 220, type: "carnivore", tier: 3 },
-      { name: "Tyrannosaurus (Subadult Female)", price: 300, type: "carnivore", tier: 3 },
-      { name: "Tyrannosaurus (Feathered)", price: 350, type: "carnivore", tier: 3 },
-      { name: "Spinosaurus (Male)", price: 220, type: "carnivore", tier: 3 },
-      { name: "Spinosaurus (Female)", price: 320, type: "carnivore", tier: 3 },
-      { name: "Giganotosaurus (Male)", price: 210, type: "carnivore", tier: 3 },
-      { name: "Giganotosaurus (Female)", price: 300, type: "carnivore", tier: 3 }
+    const dinos = [
+      // 🌿 Травоядные
+      {name: "Dryosaurus", price: 25, type: "herbivore", tier: 1},
+      {name: "Avaceratops", price: 30, type: "herbivore", tier: 1},
+      {name: "Gallimimus", price: 45, type: "herbivore", tier: 1},
+
+      {name: "Maiasaura (Male)", price: 90, type: "herbivore", tier: 2},
+      {name: "Maiasaura (Female)", price: 130, type: "herbivore", tier: 2},
+      {name: "Diabloceratops (Male)", price: 110, type: "herbivore", tier: 2},
+      {name: "Diabloceratops (Female)", price: 165, type: "herbivore", tier: 2},
+      {name: "Pachycephalosaurus (Male)", price: 40, type: "herbivore", tier: 2},
+      {name: "Pachycephalosaurus (Female)", price: 90, type: "herbivore", tier: 2},
+
+      {name: "Stegosaurus (Male)", price: 210, type: "herbivore", tier: 3},
+      {name: "Stegosaurus (Female)", price: 275, type: "herbivore", tier: 3},
+      {name: "Ankylosaurus (Male)", price: 190, type: "herbivore", tier: 3},
+      {name: "Ankylosaurus (Female)", price: 255, type: "herbivore", tier: 3},
+      {name: "Therizinosaurus (Male)", price: 225, type: "herbivore", tier: 3},
+      {name: "Therizinosaurus (Female)", price: 290, type: "herbivore", tier: 3},
+      {name: "Triceratops (Male)", price: 235, type: "herbivore", tier: 3},
+      {name: "Triceratops (Female)", price: 295, type: "herbivore", tier: 3},
+      {name: "Shantungosaurus (Male)", price: 245, type: "herbivore", tier: 3},
+      {name: "Shantungosaurus (Female)", price: 310, type: "herbivore", tier: 3},
+      {name: "Camarasaurus", price: 340, type: "herbivore", tier: 3},
+      {name: "Puertasaurus", price: 445, type: "herbivore", tier: 3},
+
+      // 🍖 Плотоядные
+      {name: "Herrerasaurus", price: 25, type: "carnivore", tier: 1},
+      {name: "Austroraptor", price: 25, type: "carnivore", tier: 1},
+      {name: "Utahraptor", price: 55, type: "carnivore", tier: 1},
+      {name: "Dilophosaurus", price: 65, type: "carnivore", tier: 1},
+
+      {name: "Ceratosaurus (Male)", price: 110, type: "carnivore", tier: 2},
+      {name: "Ceratosaurus (Female)", price: 150, type: "carnivore", tier: 2},
+      {name: "Allosaurus (Male)", price: 150, type: "carnivore", tier: 2},
+      {name: "Allosaurus (Female)", price: 190, type: "carnivore", tier: 2},
+      {name: "Baryonyx (Male)", price: 85, type: "carnivore", tier: 2},
+      {name: "Baryonyx (Female)", price: 125, type: "carnivore", tier: 2},
+      {name: "Carnotaurus (Male)", price: 110, type: "carnivore", tier: 2},
+      {name: "Carnotaurus (Female)", price: 180, type: "carnivore", tier: 2},
+      {name: "Suchomimus (Male)", price: 150, type: "carnivore", tier: 2},
+      {name: "Suchomimus (Female)", price: 190, type: "carnivore", tier: 2},
+      {name: "Albertosaurus", price: 220, type: "carnivore", tier: 2},
+
+      {name: "Acrocanthosaurus (Male)", price: 190, type: "carnivore", tier: 3},
+      {name: "Acrocanthosaurus (Female)", price: 260, type: "carnivore", tier: 3},
+      {name: "Tyrannosaurus (Subadult Male)", price: 220, type: "carnivore", tier: 3},
+      {name: "Tyrannosaurus (Subadult Female)", price: 300, type: "carnivore", tier: 3},
+      {name: "Tyrannosaurus (Feathered)", price: 350, type: "carnivore", tier: 3},
+      {name: "Spinosaurus (Male)", price: 220, type: "carnivore", tier: 3},
+      {name: "Spinosaurus (Female)", price: 320, type: "carnivore", tier: 3},
+      {name: "Giganotosaurus (Male)", price: 210, type: "carnivore", tier: 3},
+      {name: "Giganotosaurus (Female)", price: 300, type: "carnivore", tier: 3}
     ];
 
-    const shop = document.getElementById("shop");
-    const currencySelect = document.getElementById("currency");
-    let rates = { RUB: 1, USD: 0.011, UAH: 0.42 };
-    let currentCurrency = "RUB";
-
-    async function fetchRates() {
-      try {
-        const res = await fetch("https://api.exchangerate.host/latest?base=RUB&symbols=USD,UAH,RUB");
-        const data = await res.json();
-        rates = data.rates;
-        renderShop();
-      } catch (e) {
-        console.error("Ошибка загрузки курса", e);
-      }
-    }
-
-    function renderShop(type = "all", tier = "all") {
-      shop.innerHTML = "";
-      dinos
-        .filter(d => (type === "all" || d.type === type))
-        .filter(d => (tier === "all" || d.tier == tier))
-        .forEach(dino => {
-          const div = document.createElement("div");
-          div.className = "card";
-          div.innerHTML = `
-            <h3>${dino.name}</h3>
-            <div class="price">${(dino.price * rates[currentCurrency]).toFixed(2)} ${currentCurrency}</div>
-          `;
-          shop.appendChild(div);
-        });
-    }
-
-    // Фильтры
     let currentType = "all";
     let currentTier = "all";
-    document.querySelectorAll(".filters button").forEach(btn => {
-      btn.addEventListener("click", () => {
-        if (btn.dataset.type) {
-          currentType = btn.dataset.type;
-          document.querySelectorAll("[data-type]").forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
+    let searchQuery = "";
+
+    function renderShop() {
+      const shop = document.getElementById("shop");
+      shop.innerHTML = "";
+      const selectedCurrency = document.getElementById("currency").value;
+      dinos.forEach(dino => {
+        if (
+          (currentType === "all" || dino.type === currentType) &&
+          (currentTier === "all" || dino.tier == currentTier) &&
+          (dino.name.toLowerCase().includes(searchQuery.toLowerCase()))
+        ) {
+          const priceConverted = (dino.price * exchangeRates[selectedCurrency]).toFixed(2);
+          shop.innerHTML += `
+            <div class="card">
+              <h3>${dino.name}</h3>
+              <p class="price">${priceConverted} ${selectedCurrency}</p>
+            </div>
+          `;
         }
-        if (btn.dataset.tier) {
-          currentTier = btn.dataset.tier;
-          document.querySelectorAll("[data-tier]").forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-        }
-        renderShop(currentType, currentTier);
       });
+    }
+
+    function filterType(type) {
+      currentType = type;
+      renderShop();
+    }
+    function filterTier(tier) {
+      currentTier = tier;
+      renderShop();
+    }
+    document.getElementById("currency").addEventListener("change", renderShop);
+    document.getElementById("search").addEventListener("input", (e) => {
+      searchQuery = e.target.value;
+      renderShop();
     });
 
-    currencySelect.addEventListener("change", () => {
-      currentCurrency = currencySelect.value;
-      renderShop(currentType, currentTier);
-    });
-
-    // Автообновление курсов раз в 10 минут
-    setInterval(fetchRates, 600000);
-
-    fetchRates();
+    renderShop();
   </script>
 </body>
 </html>
